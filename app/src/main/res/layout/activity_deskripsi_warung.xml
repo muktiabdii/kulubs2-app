@@ -20,6 +20,18 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
 
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardContainer"
         android:layout_width="match_parent"
@@ -51,10 +63,13 @@
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
-                <ImageView
+                <ImageButton
+                    android:id="@+id/thumbsUpButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_thumbs_up" />
+                    android:background="@null"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/thumbs_up_selector"/>
             </LinearLayout>
 
             <!-- Info Warung + Rating & Favorite -->
