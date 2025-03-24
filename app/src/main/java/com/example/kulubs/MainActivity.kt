@@ -21,12 +21,5 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        // Tombol untuk navigasi ke SearchActivity
-        val searchButton = findViewById<Button>(R.id.btnSearch)
-        searchButton.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
-        }
     }
 }
