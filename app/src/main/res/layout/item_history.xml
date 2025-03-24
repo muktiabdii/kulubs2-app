@@ -1,0 +1,14 @@
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvHistoryItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="16sp"
+    android:textColor="#F3D394"
+    android:fontFamily="@font/raleway_medium"
+    android:padding="12dp"
+    android:paddingStart="0dp"
+    android:text="Belum ada riwayat pencarian"
+    android:background="?android:attr/selectableItemBackground"
+    android:focusable="false"
+    android:clickable="false" />

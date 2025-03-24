@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchResultActivity">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/rounded_header"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow_back"
+        android:contentDescription="Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        android:translationY="-45dp">
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/rounded_searchbar_stroke"
+            android:drawableEnd="@drawable/ic_search"
+            android:fontFamily="@font/raleway_light"
+            android:hint="Cari..."
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColorHint="#B3000000"
+            android:textSize="16sp"
+            android:inputType="text"
+            android:imeOptions="actionSearch"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/filterContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view">
+
+        <TextView
+            android:id="@+id/filterTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter"
+            android:textColor="#E47911"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Tambahkan tombol filter di sini -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRate"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:text="⭐"
+                android:drawableEnd="@drawable/ic_dropdown"
+                app:cornerRadius="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="#E47911"
+                android:backgroundTint="@android:color/transparent"
+                app:strokeColor="#CC4302"
+                android:layout_marginEnd="5dp"
+                app:strokeWidth="1dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAll"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Semua"
+                app:cornerRadius="10dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#E47911"
+                android:backgroundTint="@android:color/transparent"
+                app:strokeColor="#CC4302"
+                android:layout_marginEnd="5dp"
+                app:strokeWidth="1dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFood1"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Chinese"
+                app:cornerRadius="10dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#E47911"
+                android:backgroundTint="@color/filter_button_selector"
+                app:strokeColor="#CC4302"
+                android:layout_marginEnd="5dp"
+                app:strokeWidth="1dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFood2"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Nusantara"
+                app:cornerRadius="10dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#E47911"
+                android:backgroundTint="@android:color/transparent"
+                app:strokeColor="#CC4302"
+                android:layout_marginEnd="5dp"
+                app:strokeWidth="1dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvHasil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Hasil Pencarian"
+            android:textSize="16sp"
+            android:fontFamily="@font/raleway_medium"
+            android:textColor="#D6891D"/>
+
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Hasil"
+            android:textSize="16sp"
+            android:fontFamily="@font/raleway_medium"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
