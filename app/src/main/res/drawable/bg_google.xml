@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#F3D394"/>
+            <size
+                android:width="60dp"
+                android:height="60dp"/>
+        </shape>
+    </item>
+
+    <item>
+        <bitmap
+            android:src="@drawable/google"/>
+    </item>
+
+</layer-list>
