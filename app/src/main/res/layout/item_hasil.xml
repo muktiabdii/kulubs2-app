@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Gambar -->
             <ImageView
                 android:id="@+id/img_warung"
                 android:layout_width="match_parent"
@@ -32,7 +31,6 @@
                 android:layout_below="@id/img_warung"
                 android:orientation="horizontal">
 
-                <!-- Bagian Informasi -->
                 <LinearLayout
                     android:id="@+id/layout_info"
                     android:layout_width="wrap_content"
@@ -43,7 +41,6 @@
                     android:paddingBottom="12dp"
                     android:paddingLeft="12dp">
 
-                    <!-- Nama Warung -->
                     <TextView
                         android:id="@+id/tv_nama_warung"
                         android:layout_width="wrap_content"
@@ -53,7 +50,6 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- Rating & Disukai -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -61,7 +57,6 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <!-- Bintang Rating -->
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
@@ -115,7 +110,6 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Deskripsi -->
                     <TextView
                         android:id="@+id/tv_deskripsi"
                         android:layout_width="wrap_content"
@@ -126,7 +120,6 @@
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
-                    <!-- Kategori -->
                     <TextView
                         android:id="@+id/tv_kategori"
                         android:layout_width="wrap_content"
@@ -137,7 +130,6 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!-- Tombol WhatsApp & Tulis Review -->
                 <LinearLayout
                     android:id="@+id/layout_buttons"
                     android:layout_width="wrap_content"

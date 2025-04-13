@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,23 +28,21 @@ class SearchResultActivity : AppCompatActivity() {
     private lateinit var warungAdapter: WarungAdapter
     private val firestoreRepository = FirestoreRepository()
 
-    // Keep track of current filters
     private var selectedCategories: MutableSet<String> = mutableSetOf()
     private var currentMinRating: Float = 0f
 
-    // Original unfiltered list
     private var allWarungs: List<WarungItem> = listOf()
 
-    // Constants
     private val SEMUA_FILTER_TEXT = "Semua"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_result)
 
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primary)
+
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
         val searchButton = findViewById<ImageButton>(R.id.searchButton)
-
         searchButton.setOnClickListener {
             val query = searchEditText.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -55,28 +54,22 @@ class SearchResultActivity : AppCompatActivity() {
 
         val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener {
-            finish() // Kembali ke activity sebelumnya (SearchActivity)
+            finish()
         }
 
-        // Get the search query from intent
         val searchQuery = intent.getStringExtra("QUERY") ?: ""
 
-        // Set up the search EditText with the query
 
         searchEditText.setText(searchQuery)
 
-        // Set the result text with the query
         val resultText = findViewById<TextView>(R.id.resultText)
         resultText.text = "Hasil pencarian untuk \"$searchQuery\""
 
-        // Set up search functionality
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val newQuery = searchEditText.text.toString().trim()
                 if (newQuery.isNotEmpty()) {
-                    // Update the result text
                     resultText.text = "Hasil pencarian untuk \"$newQuery\""
-                    // Perform new search
                     performSearch(newQuery)
                 }
                 true
@@ -91,14 +84,11 @@ class SearchResultActivity : AppCompatActivity() {
     }
 
     private fun performSearch(query: String) {
-        // Implement your search logic here
-        // You can filter the existing data or fetch new data from Firestore
         lifecycleScope.launch {
             try {
                 val filteredWarungs = firestoreRepository.searchWarungs(query)
                 warungAdapter.submitList(filteredWarungs)
 
-                // Update result text
                 findViewById<TextView>(R.id.resultText).text =
                     "Menampilkan ${filteredWarungs.size} hasil untuk \"$query\""
             } catch (e: Exception) {
@@ -114,7 +104,6 @@ class SearchResultActivity : AppCompatActivity() {
         rvFilters.setHasFixedSize(true)
         rvFilters.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        // Initialize with "Semua" selected by default
         filterItems = mutableListOf(
             FilterItem(1, "⭐", isSelected = false, isSpinner = true),
             FilterItem(2, "Semua", isSelected = true, isSpinner = false)
@@ -125,10 +114,8 @@ class SearchResultActivity : AppCompatActivity() {
                 val semuaItem = filterItems.find { it.id == 2 }!!
 
                 when {
-                    // Case 1: Clicking "Semua"
                     selectedItem.id == 2 -> {
                         if (!selectedItem.isSelected) {
-                            // Deselect all others and select "Semua"
                             filterItems.forEach {
                                 it.isSelected = it.id == 2
                             }
@@ -137,12 +124,10 @@ class SearchResultActivity : AppCompatActivity() {
                         }
                     }
 
-                    // Case 2: Clicking an already selected filter (deselecting)
                     selectedItem.isSelected -> {
                         selectedItem.isSelected = false
                         selectedCategories.remove(selectedItem.text)
 
-                        // If no filters left selected, default to "Semua"
                         if (selectedCategories.isEmpty()) {
                             semuaItem.isSelected = true
                             selectedCategories.add("Semua")
@@ -152,9 +137,7 @@ class SearchResultActivity : AppCompatActivity() {
                         }
                     }
 
-                    // Case 3: Selecting a new filter
                     else -> {
-                        // Deselect "Semua" if it was selected
                         if (semuaItem.isSelected) {
                             semuaItem.isSelected = false
                             selectedCategories.remove("Semua")
@@ -182,11 +165,9 @@ class SearchResultActivity : AppCompatActivity() {
 
         warungAdapter = WarungAdapter(
             onItemClick = { warung ->
-                // Handle warung item click - navigate to detail page
                 navigateToWarungDetail(warung)
             },
             onReviewClick = { warung ->
-                // Handle review button click
                 navigateToWriteReview(warung)
             }
         )
@@ -205,33 +186,25 @@ class SearchResultActivity : AppCompatActivity() {
     private fun loadDataFromFirestore() {
         lifecycleScope.launch {
             try {
-                // Load food categories
                 val categories = firestoreRepository.getFoodCategoryOptions()
 
-                // Start with spinner filter
                 filterItems.clear()
                 filterItems.add(FilterItem(1, "⭐", isSelected = false, isSpinner = true))
 
-                // Add "Semua" filter first (selected by default)
                 val semuaFilter = categories.find { it.text == "Semua" }
                     ?: FilterItem(2, "Semua", isSelected = true, isSpinner = false)
 
-                // Make sure Semua is selected by default
                 semuaFilter.isSelected = true
                 filterItems.add(semuaFilter)
 
-                // Add remaining categories (not selected by default)
                 categories
                     .filter { it.text != "Semua" }
                     .forEach { filterItems.add(it.copy(isSelected = false)) }
 
-                // Update selected categories
                 selectedCategories = mutableSetOf("Semua")
 
-                // Notify adapter about new items
                 filterAdapter.notifyDataSetChanged()
 
-                // Load warung data
                 allWarungs = firestoreRepository.getAllWarungs()
                 warungAdapter.submitList(allWarungs)
 
@@ -251,7 +224,6 @@ class SearchResultActivity : AppCompatActivity() {
                 AlertDialog.Builder(this@SearchResultActivity)
                     .setTitle("Filter berdasarkan Rating")
                     .setItems(ratingOptions.toTypedArray()) { dialog, which ->
-                        // Apply selected rating filter
                         val selectedOption = ratingOptions[which]
                         val ratingValue = when (selectedOption) {
                             "Semua" -> 0f
@@ -263,7 +235,6 @@ class SearchResultActivity : AppCompatActivity() {
 
                         currentMinRating = ratingValue
 
-                        // Update spinner text
                         val spinnerItem = filterItems[0]
                         val newSpinnerItem = FilterItem(
                             id = spinnerItem.id,
@@ -274,7 +245,6 @@ class SearchResultActivity : AppCompatActivity() {
                         filterItems[0] = newSpinnerItem
                         filterAdapter.notifyItemChanged(0)
 
-                        // Apply filters
                         applyFilters()
                     }
                     .show()
@@ -288,19 +258,16 @@ class SearchResultActivity : AppCompatActivity() {
     private fun applyFilters() {
         lifecycleScope.launch {
             try {
-                // For each selected category, fetch filtered results and combine
                 val results = mutableListOf<WarungItem>()
 
                 if (selectedCategories.contains(SEMUA_FILTER_TEXT) || selectedCategories.isEmpty()) {
-                    // If "Semua" is selected, get all results with just the rating filter
                     val filteredWarungs = firestoreRepository.getWarungsFiltered(
                         category = null,
                         minRating = if (currentMinRating == 0f) null else currentMinRating
                     )
                     results.addAll(filteredWarungs)
                 } else {
-                    // Get filtered results for each selected category
-                    val processedWarungIds = mutableSetOf<String>() // To avoid duplicates
+                    val processedWarungIds = mutableSetOf<String>()
 
                     for (category in selectedCategories) {
                         val filteredWarungs = firestoreRepository.getWarungsFiltered(
@@ -308,9 +275,7 @@ class SearchResultActivity : AppCompatActivity() {
                             minRating = if (currentMinRating == 0f) null else currentMinRating
                         )
 
-                        // Add warungs that haven't been added yet
                         for (warung in filteredWarungs) {
-                            // Check if the warung has a non-null ID and hasn't been processed yet
                             val warungId = warung.id
                             if (warungId != null && !processedWarungIds.contains(warungId)) {
                                 results.add(warung)
@@ -320,10 +285,8 @@ class SearchResultActivity : AppCompatActivity() {
                     }
                 }
 
-                // Update adapter with combined results
                 warungAdapter.submitList(results)
 
-                // Show filter feedback
                 val categoryStr = if (selectedCategories.contains(SEMUA_FILTER_TEXT) || selectedCategories.isEmpty()) {
                     "semua kategori"
                 } else {

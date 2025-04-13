@@ -118,7 +118,6 @@
             android:fontFamily="@font/raleway_medium"
             android:textColor="@color/black"/>
 
-        <!-- RecyclerView untuk hasil pencarian -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_hasil"
             android:layout_width="match_parent"

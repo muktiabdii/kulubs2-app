@@ -16,7 +16,6 @@ class FirestoreRepository {
     suspend fun searchWarungs(query: String): List<WarungItem> {
         return withContext(Dispatchers.IO) {
             try {
-                // Case-insensitive search
                 val queryLower = query.lowercase()
 
                 val snapshot = db.collection("warungs")
@@ -41,7 +40,6 @@ class FirestoreRepository {
         }
     }
 
-    // Get rating filter options
     suspend fun getRatingFilterOptions(): List<String> {
         return withContext(Dispatchers.IO) {
             try {
@@ -54,7 +52,6 @@ class FirestoreRepository {
         }
     }
 
-    // Get food category filter options
     suspend fun getFoodCategoryOptions(): List<FilterItem> {
         return withContext(Dispatchers.IO) {
             try {
@@ -62,18 +59,16 @@ class FirestoreRepository {
                 val options = document.get("options") as? List<String> ?:
                 listOf("Semua", "Mie", "Nusantara", "Nasi", "Western", "Japanese")
 
-                // Convert to FilterItem objects
                 options.mapIndexed { index, text ->
                     FilterItem(
-                        id = index + 2, // ID 1 is reserved for the rating spinner
+                        id = index + 2,
                         text = text,
-                        isSelected = index == 0, // "Semua" is selected by default
+                        isSelected = index == 0,
                         isSpinner = false
                     )
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error getting food categories", e)
-                // Fallback data
                 listOf(
                     FilterItem(2, "Semua", isSelected = true, isSpinner = false),
                     FilterItem(3, "Mie", isSelected = false, isSpinner = false),
@@ -86,14 +81,13 @@ class FirestoreRepository {
         }
     }
 
-    // Get all warungs
     suspend fun getAllWarungs(): List<WarungItem> {
         return withContext(Dispatchers.IO) {
             try {
                 val querySnapshot = db.collection("warungs").get().await()
                 querySnapshot.documents.mapNotNull { document ->
                     document.toObject(WarungItem::class.java)?.apply {
-                        id = document.id // Ensure ID is set from document ID
+                        id = document.id
                     }
                 }
             } catch (e: Exception) {
@@ -103,15 +97,12 @@ class FirestoreRepository {
         }
     }
 
-    // Get warungs filtered by category
     suspend fun getWarungsByCategory(category: String): List<WarungItem> {
         return withContext(Dispatchers.IO) {
             try {
                 val querySnapshot = if (category == "Semua") {
-                    // Get all warungs
                     db.collection("warungs").get().await()
                 } else {
-                    // Get warungs with specific category
                     db.collection("warungs")
                         .whereArrayContains("categories", category)
                         .get()
@@ -120,7 +111,7 @@ class FirestoreRepository {
 
                 querySnapshot.documents.mapNotNull { document ->
                     document.toObject(WarungItem::class.java)?.apply {
-                        id = document.id // Ensure ID is set from document ID
+                        id = document.id
                     }
                 }
             } catch (e: Exception) {
@@ -130,29 +121,23 @@ class FirestoreRepository {
         }
     }
 
-    // Get warungs with combined filters (category and rating)
     suspend fun getWarungsFiltered(category: String?, minRating: Float?): List<WarungItem> {
         return withContext(Dispatchers.IO) {
             try {
                 var query = db.collection("warungs")
 
-                // Apply rating filter if specified
                 if (minRating != null && minRating > 0) {
                     query = query.whereGreaterThanOrEqualTo("rating", minRating) as CollectionReference
                 }
 
-                // Execute query
                 val querySnapshot = query.get().await()
 
-                // Filter by category in memory if needed
-                // (Firestore doesn't support combined whereArrayContains and inequality filters)
                 var results = querySnapshot.documents.mapNotNull { document ->
                     document.toObject(WarungItem::class.java)?.apply {
                         id = document.id
                     }
                 }
 
-                // Apply category filter in memory if specified
                 if (category != null && category != "Semua") {
                     results = results.filter { warung ->
                         warung.categories.contains(category)

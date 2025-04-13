@@ -13,13 +13,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class SearchActivity : AppCompatActivity() {
 
     private val MAX_HISTORY = 5
-    // Deklarasikan variabel di level class
     private lateinit var historyListView: ListView
     private lateinit var tvEmptyHistory: TextView
     private lateinit var searchEditText: EditText
@@ -28,17 +28,16 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        // Inisialisasi views
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primary)
+
         historyListView = findViewById(R.id.lvHistory)
         tvEmptyHistory = findViewById(R.id.tvEmptyHistory)
         searchEditText = findViewById(R.id.searchEditText)
         val searchButton = findViewById<ImageButton>(R.id.searchButton)
         val tvHapus = findViewById<TextView>(R.id.tvHapus)
 
-        // Display search history
         displaySearchHistory()
 
-        // 1. Handle search button click
         searchButton.setOnClickListener {
             val query = searchEditText.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -53,21 +52,18 @@ class SearchActivity : AppCompatActivity() {
             clearSearchHistory()
         }
 
-        // Tampilkan riwayat pencarian
         displaySearchHistory()
 
-        // Tambahkan IME options
         searchEditText.imeOptions = EditorInfo.IME_ACTION_SEARCH
         searchEditText.inputType = android.text.InputType.TYPE_CLASS_TEXT
 
-        // Implementasi listener untuk aksi keyboard
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val query = searchEditText.text.toString().trim()
                 if (query.isNotEmpty()) {
-                    // Simpan query ke riwayat
+
                     saveSearchQuery(query)
-                    // Lakukan pencarian
+
                     performSearch(query)
                 }
                 true
@@ -80,33 +76,26 @@ class SearchActivity : AppCompatActivity() {
     private fun performSearch(query: String) {
         val intent = Intent(this, SearchResultActivity::class.java).apply {
             putExtra("QUERY", query)
-            // Clear the activity stack so back button works properly
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         }
         startActivity(intent)
-        finish() // Close the search activity
     }
 
     private fun saveSearchQuery(query: String) {
         val prefs = getSharedPreferences("SearchHistory", Context.MODE_PRIVATE)
 
-        // Ambil riwayat yang ada
         val historySet = prefs.getStringSet("history", HashSet<String>())?.toMutableSet()
             ?: mutableSetOf()
 
-        // Tambahkan query baru (hapus dulu jika sudah ada untuk menghindari duplikat)
         historySet.remove(query)
         historySet.add(query)
 
-        // Jika lebih dari MAX_HISTORY, hapus yang paling lama
         if (historySet.size > MAX_HISTORY) {
             val historyList = historySet.toMutableList()
-            historyList.removeAt(0) // Hapus item pertama (paling lama)
+            historyList.removeAt(0)
             historySet.clear()
             historySet.addAll(historyList)
         }
 
-        // Simpan kembali ke SharedPreferences
         prefs.edit().putStringSet("history", historySet).apply()
     }
 
@@ -142,7 +131,6 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Perbarui riwayat pencarian setiap kali activity dibuka kembali
         displaySearchHistory()
     }
 }

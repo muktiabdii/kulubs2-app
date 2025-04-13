@@ -51,18 +51,12 @@ class WarungAdapter(
             tvAlamat.text = warung.address
             tvKategori.text = warung.categories.joinToString(", ")
 
-            // Set star rating based on the rating value
-            // This would require you to have access to the ImageView stars
-            // We're skipping this part as it depends on how you implement the star rating UI
-
-            // Load image with Glide
             Glide.with(itemView.context)
                 .load(warung.imageUrl)
                 .placeholder(R.drawable.sample_warung)
                 .error(R.drawable.sample_warung)
                 .into(imgWarung)
 
-            // Set WhatsApp button click listener
             btnWhatsapp.setOnClickListener {
                 try {
                     val intent = Intent(Intent.ACTION_VIEW)
@@ -73,12 +67,10 @@ class WarungAdapter(
                 }
             }
 
-            // Set Review button click listener
             btnReview.setOnClickListener {
                 onReviewClick(warung)
             }
 
-            // Set card click listener
             itemView.setOnClickListener {
                 onItemClick(warung)
             }

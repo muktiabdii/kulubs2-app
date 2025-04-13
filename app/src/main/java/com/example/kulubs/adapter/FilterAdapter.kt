@@ -23,7 +23,6 @@ class FilterAdapter(
     }
 
     init {
-        // Log items when adapter is created
         Log.d(TAG, "Adapter initialized with ${items.size} items")
         items.forEachIndexed { index, item ->
             Log.d(TAG, "Item $index: ${item.text}, isSpinner: ${item.isSpinner}")
@@ -74,7 +73,6 @@ class FilterAdapter(
         fun bind(item: FilterItem) {
             button.text = item.text
 
-            // Atur warna berdasarkan status seleksi
             if (item.isSelected) {
                 button.backgroundTintList = ColorStateList.valueOf(
                     ContextCompat.getColor(itemView.context, R.color.filter_active)
@@ -100,7 +98,6 @@ class FilterAdapter(
         fun bind(item: FilterItem) {
             button.text = item.text
 
-            // Atur warna berdasarkan status seleksi
             if (item.isSelected) {
                 button.backgroundTintList = ColorStateList.valueOf(
                     ContextCompat.getColor(itemView.context, R.color.filter_active)
