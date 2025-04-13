@@ -7,8 +7,10 @@ import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,28 +19,39 @@ import androidx.core.view.WindowInsetsCompat
 class SearchActivity : AppCompatActivity() {
 
     private val MAX_HISTORY = 5
-    private lateinit var historySearchTextView: TextView
+    // Deklarasikan variabel di level class
+    private lateinit var historyListView: ListView
+    private lateinit var tvEmptyHistory: TextView
+    private lateinit var searchEditText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_search)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        // Inisialisasi views
+        historyListView = findViewById(R.id.lvHistory)
+        tvEmptyHistory = findViewById(R.id.tvEmptyHistory)
+        searchEditText = findViewById(R.id.searchEditText)
+        val searchButton = findViewById<ImageButton>(R.id.searchButton)
+        val tvHapus = findViewById<TextView>(R.id.tvHapus)
+
+        // Display search history
+        displaySearchHistory()
+
+        // 1. Handle search button click
+        searchButton.setOnClickListener {
+            val query = searchEditText.text.toString().trim()
+            if (query.isNotEmpty()) {
+                saveSearchQuery(query)
+                performSearch(query)
+            } else {
+                Toast.makeText(this, "Masukkan kata kunci pencarian", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        // Inisialisasi EditText pencarian
-        val searchEditText = findViewById<EditText>(R.id.searchEditText)
-
-        val tvHapus = findViewById<TextView>(R.id.tvHapus)
         tvHapus.setOnClickListener {
             clearSearchHistory()
         }
-
-        // Inisialisasi TextView untuk history
-        val historyListView = findViewById<ListView>(R.id.lvHistory)
 
         // Tampilkan riwayat pencarian
         displaySearchHistory()
@@ -65,9 +78,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun performSearch(query: String) {
-        val intent = Intent(this, SearchResultActivity::class.java)
-        intent.putExtra("QUERY", query)
+        val intent = Intent(this, SearchResultActivity::class.java).apply {
+            putExtra("QUERY", query)
+            // Clear the activity stack so back button works properly
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        }
         startActivity(intent)
+        finish() // Close the search activity
     }
 
     private fun saveSearchQuery(query: String) {
@@ -97,9 +114,6 @@ class SearchActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("SearchHistory", Context.MODE_PRIVATE)
         prefs.edit().remove("history").apply()
 
-        val historyListView = findViewById<ListView>(R.id.lvHistory)
-        val tvEmptyHistory = findViewById<TextView>(R.id.tvEmptyHistory)
-
         tvEmptyHistory.visibility = TextView.VISIBLE
         historyListView.visibility = ListView.GONE
     }
@@ -108,9 +122,6 @@ class SearchActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("SearchHistory", Context.MODE_PRIVATE)
         val historySet = prefs.getStringSet("history", HashSet<String>()) ?: HashSet()
         val historyList = historySet.toList().reversed().take(5)
-
-        val historyListView = findViewById<ListView>(R.id.lvHistory)
-        val tvEmptyHistory = findViewById<TextView>(R.id.tvEmptyHistory)
 
         if (historyList.isEmpty()) {
             tvEmptyHistory.visibility = TextView.VISIBLE

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "426782571217",
+    "project_id": "kulubs-6f9e3",
+    "storage_bucket": "kulubs-6f9e3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:426782571217:android:1425cd7896d650b326e3f0",
+        "android_client_info": {
+          "package_name": "com.example.kulubs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY-8qKhRfBBA2Fa2J3UbsG0fsMBapLal0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
