@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="orange">#FF5F00</color>
+    <!-- Warna yang sudah ada (contoh) -->
+    <color name="orange">#FF9800</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Warna tambahan untuk menu CRUD -->
+    <color name="gray">#9E9E9E</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="border_gray">#E0E0E0</color>
+    <color name="blue">#2196F3</color>
+    <color name="red">#F44336</color>
+    <color name="green">#4CAF50</color>
+    <color name="dark_gray">#424242</color>
 </resources>
